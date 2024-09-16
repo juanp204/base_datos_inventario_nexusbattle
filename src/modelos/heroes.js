@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
-const { Objeto, effectSchema } = require('./objetos');
+const { effectSchema } = require('./objetos');
 
 const skillSchema = new Schema({
     name: { type: String, required: true },

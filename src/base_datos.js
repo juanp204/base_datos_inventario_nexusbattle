@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Heroe = require('./modelos/heroes');
 const { Weapon, Armor, Item, Ability } = require('./modelos/objetos'); // Asegúrate de exportar Weapon correctamente
+const Usuario = require('./modelos/usuarios');
 mongoose.set('bufferCommands', false);
 
 async function obtenerIdHeroePorNombre(nombre) {
@@ -688,9 +689,16 @@ async function cerrarBaseDatos() {
 async function insertarUserPrueba() {
     try {
         await conectarBaseDatos();
-        const user = [];
-        await Heroe.insertMany(heroes);
-        console.log('Héroes insertados correctamente');
+        //const user = [{ user: "juan" }];
+
+        const nuevoUsuario = new Usuario({
+            user: 'usuario1' // Inventario vacío
+        });
+
+        //await Heroe.insertMany(heroes);
+        await nuevoUsuario.save();
+
+        console.log('usuario insertados correctamente');
     } catch (error) {
         console.error('Error al insertar héroes:', error);
     } finally {
@@ -703,7 +711,7 @@ async function insertarUserPrueba() {
     //await insertarWeapons();
     //await insertarArmors();
     //await insertarItems();
-    //await insertarUserPrueba();
+    await insertarUserPrueba();
 })();
 
 

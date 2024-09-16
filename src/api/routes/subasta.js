@@ -41,40 +41,8 @@ router.post('/transfer-object', async (req, res) => {
     }
 });
 
-
-router.get('/inventory/:userId', async (req, res) => {
-    const { userId } = req.params;
-
-    try {
-        // Verifica si el usuario existe
-        const user = await Usuario.findById(userId)
-            .populate({
-                path: 'inventario.objetoId'  // Ajusta los campos que quieres devolver según tu esquema de objetos
-            })
-            .populate({
-                path: 'inventario_juego.objetoId'// Ajusta los campos que quieres devolver según tu esquema de objetos
-            })
-            .select('inventario inventario_juego');
-
-        if (!user) {
-            return res.status(404).json({ error: 'Jugador no encontrado.' });
-        }
-
-        // Obtén el inventario del jugador con los detalles de los objetos
-        const inventory = {
-            inventario: user.inventario,
-            inventario_juego: user.inventario_juego
-        };
-
-        res.status(200).json(inventory);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error en el servidor.' });
-    }
-});
-
 // Endpoint para desactivar un objeto del inventario
-router.patch('/inventory/deactivate/:userId/:objetoId', async (req, res) => {
+router.patch('/deactivateObject/:userId/:objetoId', async (req, res) => {
     const { userId, objetoId } = req.params;
 
     try {
@@ -104,7 +72,7 @@ router.patch('/inventory/deactivate/:userId/:objetoId', async (req, res) => {
 });
 
 // Endpoint para activar un objeto del inventario
-router.patch('/inventory/activate/:userId/:objetoId', async (req, res) => {
+router.patch('/activateObject/:userId/:objetoId', async (req, res) => {
     const { userId, objetoId } = req.params;
 
     try {

@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
-const Heroe = require('./heroes');
-const { Item } = require('./objetos');
 
 const usuarioSchema = new Schema({
     user: { type: String, required: true },
