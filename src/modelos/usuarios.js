@@ -9,18 +9,18 @@ const usuarioSchema = new Schema({
         equippedItems: {
             weapon: [{ type: Schema.Types.ObjectId, ref: 'Weapon' }],
             armor: [{ type: Schema.Types.ObjectId, ref: 'Armor' }],
-            items: [{ type: Schema.Types.ObjectId, ref: 'item' }]
+            items: [{ type: Schema.Types.ObjectId, ref: 'Item' }]
         },
     }],  // Referencia a Héroes
     inventario: [{
         _id: { type: Schema.Types.ObjectId, required: true },
-        objetoId: { type: Schema.Types.ObjectId, required: true },  // Puedes usar cualquier nombre en lugar de _id
+        objetoId: { type: Schema.Types.ObjectId, required: true, refPath: 'inventario.refPath' },  // Puedes usar cualquier nombre en lugar de _id
         refPath: { type: String, required: true, enum: ['Weapon', 'Armor', 'Item'] },  // Tipo de objeto
         active: { type: Boolean, default: true }
     }],  // Inventario sin límite
     inventario_juego: [{
         _id: { type: Schema.Types.ObjectId, required: true },
-        objetoId: { type: Schema.Types.ObjectId, required: true },  // Puedes usar cualquier nombre en lugar de _id
+        objetoId: { type: Schema.Types.ObjectId, required: true, refPath: 'inventario_juego.refPath' },  // Puedes usar cualquier nombre en lugar de _id
         refPath: { type: String, required: true, enum: ['Weapon', 'Armor', 'Item'] },  // Tipo de objeto
         active: { type: Boolean, default: true }  // Si no usas refPath, debes poner "ref" en cada campo donde corresponda
     }]  // Inventario con límite
