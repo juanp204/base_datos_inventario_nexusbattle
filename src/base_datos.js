@@ -669,7 +669,9 @@ async function insertarItems() {
 
 async function conectarBaseDatos() {
     try {
-        await mongoose.connect('mongodb://localhost:27017/inventario');
+        await mongoose.connect('mongodb+srv://Inventario:uFjKb8eSam571X8u@cluster0.kxdmz.mongodb.net/Inventario?retryWrites=true&w=majority&appName=Cluster0', {
+            autoIndex: true
+        });
         console.log('Conexión a MongoDB establecida correctamente');
     } catch (error) {
         console.error('Error al conectar a MongoDB:', error);
@@ -707,10 +709,10 @@ async function insertarUserPrueba() {
 }
 
 (async () => {
-    //await insertarHeroes();
-    //await insertarWeapons();
-    //await insertarArmors();
-    //await insertarItems();
+    await insertarHeroes();
+    await insertarWeapons();
+    await insertarArmors();
+    await insertarItems();
     await insertarUserPrueba();
 })();
 

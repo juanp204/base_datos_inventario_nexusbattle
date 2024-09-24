@@ -4,8 +4,8 @@ const { Schema, model } = mongoose;
 const usuarioSchema = new Schema({
     user: { type: String, required: true },
     heroes: [{
-        heroe: { type: Schema.Types.ObjectId, ref: 'Heroe' },
-        level: { type: Number, default: 1 },
+        heroe: { type: Schema.Types.ObjectId, required: true, ref: 'Heroe' },
+        level: { type: Number, required: true, default: 1 },
         equippedItems: {
             weapon: [{ type: Schema.Types.ObjectId, ref: 'Weapon' }],
             armor: [{ type: Schema.Types.ObjectId, ref: 'Armor' }],
