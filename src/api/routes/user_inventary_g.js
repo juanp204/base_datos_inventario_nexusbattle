@@ -11,8 +11,8 @@ router.get('/:userId', async (req, res) => {
     try {
         // Verifica si el usuario existe
         const user = await Usuario.findById(userId)
-            .populate('inventario.objetoId')
-            .select('inventario')
+            .populate('inventario_juego.objetoId')
+            .select('inventario_juego')
             .exec();
 
 
@@ -59,7 +59,7 @@ router.post('/add', async (req, res) => {
         }
 
         // Agrega el objeto al inventario del usuario
-        user.inventario.push({
+        user.inventario_juego.push({
             _id: new mongoose.Types.ObjectId(),
             objetoId: objeto._id,
             refPath: tipoObjeto,  // Indica el tipo de objeto (Weapon, Armor, Item)

@@ -16,6 +16,7 @@ mongoose.connect('mongodb+srv://Inventario:uFjKb8eSam571X8u@cluster0.kxdmz.mongo
 app.use('/usuarios', require('./routes/usuarios'));
 app.use('/subasta', require('./routes/subasta'));
 app.use('/inventary', require('./routes/user_inventary'));
+app.use('/inventary_game', require('./routes/user_inventary_g'));
 
 // Iniciar el servidor
 app.listen(port, () => {
