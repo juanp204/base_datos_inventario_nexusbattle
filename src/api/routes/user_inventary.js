@@ -76,4 +76,50 @@ router.post('/add', async (req, res) => {
     }
 });
 
+// Ruta para transferir un objeto de inventario a inventario_juego
+router.post('/transfer', async (req, res) => {
+    const { userId, IdObjeto } = req.body;
+
+    try {
+        // Verifica si el usuario existe
+        const user = await Usuario.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'Jugador no encontrado.' });
+        }
+
+        // Encuentra el objeto en el inventario usando el _id
+        const objetoIndex = user.inventario.findIndex(item => item._id.toString() === IdObjeto);
+
+        if (objetoIndex === -1) {
+            return res.status(404).json({ error: 'Objeto no encontrado en el inventario.' });
+        }
+
+        const objeto = user.inventario[objetoIndex];
+
+        // Verifica si el objeto está activo
+        if (!objeto.active) {
+            return res.status(400).json({ error: 'El objeto no está activo y no puede ser transferido.' });
+        }
+
+        // Elimina el objeto del inventario
+        user.inventario.splice(objetoIndex, 1);
+
+        // Agrega el objeto a inventario_juego
+        user.inventario_juego.push({
+            _id: objeto._id,
+            objetoId: objeto.objetoId,
+            refPath: objeto.refPath,
+            active: objeto.active
+        });
+
+        // Guarda los cambios en la base de datos
+        await user.save();
+
+        res.status(200).json({ message: 'Objeto transferido al inventario de juego exitosamente.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor.' });
+    }
+});
+
 module.exports = router;

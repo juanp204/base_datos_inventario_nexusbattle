@@ -76,4 +76,46 @@ router.post('/add', async (req, res) => {
     }
 });
 
+// Ruta para transferir un objeto de inventario_juego a inventario
+router.post('/transfer', async (req, res) => {
+    const { userId, IdObjeto } = req.body;
+
+    try {
+        // Verifica si el usuario existe
+        const user = await Usuario.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'Jugador no encontrado.' });
+        }
+
+        // Encuentra el objeto en inventario_juego usando el _id
+        const objetoIndex = user.inventario_juego.findIndex(item => item._id.toString() === IdObjeto);
+
+        if (objetoIndex === -1) {
+            return res.status(404).json({ error: 'Objeto no encontrado en inventario_juego.' });
+        }
+
+        // Extrae el objeto del inventario_juego
+        const objeto = user.inventario_juego[objetoIndex];
+
+        // Elimina el objeto de inventario_juego
+        user.inventario_juego.splice(objetoIndex, 1);
+
+        // Agrega el objeto al inventario
+        user.inventario.push({
+            _id: objeto._id,
+            objetoId: objeto.objetoId,
+            refPath: objeto.refPath,
+            active: objeto.active
+        });
+
+        // Guarda los cambios en la base de datos
+        await user.save();
+
+        res.status(200).json({ message: 'Objeto transferido al inventario exitosamente.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor.' });
+    }
+});
+
 module.exports = router;

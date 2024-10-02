@@ -10,10 +10,11 @@ async function obtenerIdHeroePorNombre(nombre) {
         if (heroe) {
             return heroe._id;
         } else {
-            throw new Error('Héroe no encontrado');
+            throw new Error('Héroe no encontrado ', nombre);
         }
     } catch (error) {
-        console.error('Error al obtener el ID del héroe:', error);
+        console.error('Error al obtener el ID del héroe:', error, nombre);
+
         return null;
     }
 }
@@ -24,10 +25,10 @@ async function obtenerIdWeaponPorNombre(nombre) {
         if (heroe) {
             return heroe._id;
         } else {
-            throw new Error('Héroe no encontrado');
+            throw new Error('weapon no encontrado', nombre);
         }
     } catch (error) {
-        console.error('Error al obtener el ID del héroe:', error);
+        console.error('Error al obtener el ID del weapon:', error, nombre);
         return null;
     }
 }
@@ -73,7 +74,8 @@ async function insertarHeroes() {
                         ]
                     }
                 ],
-                specialAbilities: [] // Campo agregado
+                specialAbilities: [],
+                image: 'Heroes/BarbaroTanque.png' // Associated image
             },
             {
                 name: 'Guerrero Armas',
@@ -113,7 +115,8 @@ async function insertarHeroes() {
                         ]
                     }
                 ],
-                specialAbilities: [] // Campo agregado
+                specialAbilities: [],
+                image: 'Heroes/Barbaro.png' // Associated image
             },
             {
                 name: 'Mago Fuego',
@@ -154,7 +157,8 @@ async function insertarHeroes() {
                         ]
                     }
                 ],
-                specialAbilities: [] // Campo agregado
+                specialAbilities: [],
+                image: 'Heroes/MagoFuego.png' // Associated image
             },
             {
                 name: 'Mago Hielo',
@@ -195,7 +199,8 @@ async function insertarHeroes() {
                         ]
                     }
                 ],
-                specialAbilities: [] // Campo agregado
+                specialAbilities: [],
+                image: 'Heroes/MagoHielo.png' // Associated image
             },
             {
                 name: 'Pícaro Veneno',
@@ -234,7 +239,8 @@ async function insertarHeroes() {
                         ]
                     }
                 ],
-                specialAbilities: [] // Campo agregado
+                specialAbilities: [],
+                image: 'Heroes/PicaroVeneno.png' // Associated image
             },
             {
                 name: 'Pícaro Machete',
@@ -274,9 +280,11 @@ async function insertarHeroes() {
                         ]
                     }
                 ],
-                specialAbilities: [] // Campo agregado
+                specialAbilities: [],
+                image: 'Heroes/PicaroMachete.png' // Associated image
             }
         ];
+
         await Heroe.insertMany(heroes);
         console.log('Héroes insertados correctamente');
     } catch (error) {
@@ -301,6 +309,7 @@ async function insertarWeapons() {
         const weapons = [
             {
                 name: "Espada de una mano",
+                image: "/Armas/EspadaDeUnaMano.png",
                 type: "arma",
                 heroe_type: idGuerreroTanque,
                 effects: {
@@ -311,6 +320,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Espada de dos manos",
+                image: "/Armas/EspadaDeDosManos.png",
                 type: "arma",
                 heroe_type: idGuerreroArmas,
                 effects: {
@@ -321,6 +331,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Orbe de manos ardientes",
+                image: "/Armas/OrbeDeManosArdiente.png",
                 type: "arma",
                 heroe_type: idMagoFuego,
                 effects: {
@@ -331,6 +342,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Báculo de Permafrost",
+                image: "/Armas/BaculoDePermafrost.png",
                 type: "arma",
                 heroe_type: idMagoHielo,
                 effects: {
@@ -341,6 +353,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Daga purulenta",
+                image: "/Armas/DagaPurulenta.png",
                 type: "arma",
                 heroe_type: idPicaroVeneno,
                 effects: {
@@ -351,6 +364,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Machete bendito",
+                image: "/Armas/MacheteBendito.png",
                 type: "arma",
                 heroe_type: idPicaroMachete,
                 effects: {
@@ -361,6 +375,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Escudo de dragón",
+                image: "/Armas/EscudoDeDragon.png",
                 type: "arma",
                 heroe_type: idGuerreroTanque,
                 effects: {
@@ -370,6 +385,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Piedra de afilar",
+                image: "/Armas/PiedraDeAfilar.png",
                 type: "arma",
                 heroe_type: idGuerreroArmas,
                 effects: {
@@ -379,6 +395,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Fuego fatuo",
+                image: "/Armas/FuegoFatuo.png",
                 type: "arma",
                 heroe_type: idMagoFuego,
                 effects: {
@@ -388,6 +405,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Venas heladas",
+                image: "/Armas/VenasHeladas.png",
                 type: "arma",
                 heroe_type: idMagoHielo,
                 effects: {
@@ -397,6 +415,7 @@ async function insertarWeapons() {
             },
             {
                 name: "Visión borrosa",
+                image: "/Armas/VisionBorrosa.png",
                 type: "arma",
                 heroe_type: idPicaroVeneno,
                 effects: {
@@ -405,7 +424,8 @@ async function insertarWeapons() {
                 dropRate: 4
             },
             {
-                name: "Cierra sangrienta",
+                name: "Sierra sangrienta",
+                image: "/Armas/SierraSangrienta.png",
                 type: "arma",
                 heroe_type: idPicaroMachete,
                 effects: {
@@ -439,6 +459,7 @@ async function insertarArmors() {
         const Armors = [
             {
                 name: "Defensa del enfurecido",
+                image: "/Armaduras/DefensaDelEnfurecido.png",
                 type: "pecho",
                 heroe_type: idGuerreroTanque,
                 effects: {
@@ -450,6 +471,7 @@ async function insertarArmors() {
             },
             {
                 name: "Puño lúcido",
+                image: "/Armaduras/PunoLucido.png",
                 type: "guantes",
                 heroe_type: idGuerreroArmas,
                 effects: {
@@ -461,6 +483,7 @@ async function insertarArmors() {
             },
             {
                 name: "Túnica arcana",
+                image: "/Armaduras/TunicaArcana.png",
                 type: "pecho",
                 heroe_type: idMagoFuego,
                 effects: {
@@ -472,6 +495,7 @@ async function insertarArmors() {
             },
             {
                 name: "Corona de hielo",
+                image: "/Armaduras/CoronaDeHielo.png",
                 type: "casco",
                 heroe_type: idMagoHielo,
                 effects: {
@@ -483,6 +507,7 @@ async function insertarArmors() {
             },
             {
                 name: "Mano del desterrado",
+                image: "/Armaduras/ManoDelDesterrado.png",
                 type: "guantes",
                 heroe_type: idPicaroVeneno,
                 effects: {
@@ -494,6 +519,7 @@ async function insertarArmors() {
             },
             {
                 name: "Pie de atleta",
+                image: "/Armaduras/PieDeAtleta.png",
                 type: "zapatos",
                 heroe_type: idPicaroMachete,
                 effects: {
@@ -505,6 +531,7 @@ async function insertarArmors() {
             },
             {
                 name: "Magma Ardiente",
+                image: "/Armaduras/MagmaArdiente.png",
                 type: "casco",
                 heroe_type: idGuerreroTanque,
                 effects: {
@@ -516,6 +543,7 @@ async function insertarArmors() {
             },
             {
                 name: "Puños en llamas",
+                image: "/Armaduras/PunosEnLlamas.png",
                 type: "brazaletes",
                 heroe_type: idGuerreroArmas,
                 effects: {
@@ -527,6 +555,7 @@ async function insertarArmors() {
             },
             {
                 name: "Caída de fuego",
+                image: "/Armaduras/CaidaDeFuego.png",
                 type: "pantalon",
                 heroe_type: idMagoFuego,
                 effects: {
@@ -538,6 +567,7 @@ async function insertarArmors() {
             },
             {
                 name: "Ventisca",
+                image: "/Armaduras/Ventisca.png",
                 type: "pecho",
                 heroe_type: idMagoHielo,
                 effects: {
@@ -549,6 +579,7 @@ async function insertarArmors() {
             },
             {
                 name: "Atadura carmesí",
+                image: "/Armaduras/AtaduraCarmesi.png",
                 type: "pecho",
                 heroe_type: idPicaroVeneno,
                 effects: {
@@ -560,6 +591,7 @@ async function insertarArmors() {
             },
             {
                 name: "Sangre cruel",
+                image: "/Armaduras/SangreCruel.png",
                 type: "brazaletes",
                 heroe_type: idPicaroMachete,
                 effects: {
@@ -570,6 +602,7 @@ async function insertarArmors() {
                 interaction: []
             }
         ];
+
 
         // Inserta las armas en la base de datos
         await Armor.insertMany(Armors);
@@ -591,11 +624,12 @@ async function insertarItems() {
         const idMagoHielo = await obtenerIdHeroePorNombre('Mago Hielo');
         const idPicaroVeneno = await obtenerIdHeroePorNombre('Pícaro Veneno');
         const idPicaroMachete = await obtenerIdHeroePorNombre('Pícaro Machete');
-        const idcierra = await obtenerIdWeaponPorNombre('Cierra sangrienta');
+        const idcierra = await obtenerIdWeaponPorNombre('Sierra sangrienta');
 
         const Items = [
             {
                 name: "Pinchos de escudo",
+                image: 'items/PinchosDeEscudo.png', // Associated image
                 type: "item",
                 heroe_type: idGuerreroTanque,
                 effects: {
@@ -606,6 +640,7 @@ async function insertarItems() {
             },
             {
                 name: "Empuñadura de Furia",
+                image: 'items/EmpunaduraDeFuria.png', // Associated image
                 type: "item",
                 heroe_type: idGuerreroArmas,
                 effects: {
@@ -617,6 +652,7 @@ async function insertarItems() {
             },
             {
                 name: "Anillo para Piro-explosión",
+                image: 'items/AnilloParaPiro-Explosion.png', // Associated image
                 type: "item",
                 heroe_type: idMagoFuego,
                 effects: {
@@ -627,6 +663,7 @@ async function insertarItems() {
             },
             {
                 name: "Libro de la ventisca helada",
+                image: 'items/LibroDeLaVentiscaHelada.png', // Associated image
                 type: "item",
                 heroe_type: idMagoHielo,
                 effects: {
@@ -637,6 +674,7 @@ async function insertarItems() {
             },
             {
                 name: "Veneno lacerante",
+                image: 'items/VenenoLacerante.png', // Associated image
                 type: "item",
                 heroe_type: idPicaroVeneno,
                 effects: {
@@ -647,6 +685,7 @@ async function insertarItems() {
             },
             {
                 name: "Mancuerna yugular",
+                image: 'items/MancuernaYugular.png', // Associated image
                 type: "item",
                 heroe_type: idPicaroMachete,
                 effects: {

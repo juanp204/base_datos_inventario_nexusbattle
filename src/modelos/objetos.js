@@ -23,6 +23,7 @@ const effectSchema = new Schema({
 
 const objetoSchema = new Schema({
     name: { type: String, required: true },
+    image: {type: String, required: true},
     type: { type: String, required: true, enum: ["arma", "pecho", "guantes", "casco", "zapatos", "brazaletes", "pantalon", "item", "habilidad"] },
     heroe_type: { type: Schema.Types.ObjectId, ref: 'Heroe', required: true },
     effects: { type: effectSchema, required: true },

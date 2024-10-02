@@ -24,7 +24,8 @@ const heroeSchema = new Schema({
     ],
     specialAbilities: [
         { type: Schema.Types.ObjectId, ref: 'Ability', required: false }
-    ] // Referencia a habilidades específicas
+    ],
+    image: { type: String, required: true } // Referencia a habilidades específicas
 });
 
 // Validación personalizada para asegurarse de que `specialAbilities` solo contiene habilidades

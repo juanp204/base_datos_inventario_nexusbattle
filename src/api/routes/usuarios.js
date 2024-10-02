@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 // Obtener todos los usuarios
 router.get('/', async (req, res) => {
     try {
-        const usuarios = await Usuario.find();
+        const usuarios = await Usuario.find().select('_id user')
         await console.log(usuarios)
         res.status(200).json(usuarios);
     } catch (err) {
