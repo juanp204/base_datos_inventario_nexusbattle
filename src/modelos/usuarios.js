@@ -3,15 +3,13 @@ const { Schema, model } = mongoose;
 
 const usuarioSchema = new Schema({
     user: { type: String, required: true },
-    heroes: [{
-        heroe: { type: Schema.Types.ObjectId, required: true, ref: 'Heroe' },
-        level: { type: Number, required: true, default: 1 },
-        equippedItems: {
-            weapon: [{ type: Schema.Types.ObjectId, ref: 'Weapon' }],
-            armor: [{ type: Schema.Types.ObjectId, ref: 'Armor' }],
-            items: [{ type: Schema.Types.ObjectId, ref: 'Item' }]
-        },
-    }],  // Referencia a Héroes
+    level: { type: Number, required: true, default: 1 },
+    /* heroe: { type: Schema.Types.ObjectId, required: true, ref: 'Heroe' },
+    equippedItems: {
+        weapon: [{ type: Schema.Types.ObjectId, ref: 'Weapon' }],
+        armor: [{ type: Schema.Types.ObjectId, ref: 'Armor' }],
+        items: [{ type: Schema.Types.ObjectId, ref: 'Item' }]
+    },  // Referencia a Héroes */
     inventario: [{
         _id: { type: Schema.Types.ObjectId, required: true },
         objetoId: { type: Schema.Types.ObjectId, required: true, refPath: 'inventario.refPath' },  // Puedes usar cualquier nombre en lugar de _id
