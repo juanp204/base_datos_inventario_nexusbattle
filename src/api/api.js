@@ -20,6 +20,7 @@ app.use('/usuarios', require('./routes/usuarios'));
 app.use('/subasta', require('./routes/subasta'));
 app.use('/inventary', require('./routes/user_inventary'));
 app.use('/inventary_game', require('./routes/user_inventary_g'));
+app.use('/hero', require('./routes/userhero'));
 
 // Iniciar el servidor
 app.listen(port, () => {
