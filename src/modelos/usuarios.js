@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const usuarioSchema = new Schema({
-    user: { type: String, required: true },
+    user: { type: String, required: true, unique: true },
     level: { type: Number, required: true, default: 1 },
     heroe: { type: Schema.Types.ObjectId, ref: 'Heroe' },
     /*equippedItems: {
