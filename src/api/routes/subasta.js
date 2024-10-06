@@ -4,35 +4,35 @@ const Usuario = require('../../modelos/usuarios'); // Asegúrate de tener la rut
 
 // Endpoint para intercambiar objetos entre jugadores
 router.post('/transfer-object', async (req, res) => {
-    const { fromUserId, toUserId, objetoId } = req.body;
+    const { fromUser, toUser, objetoId } = req.body; // Cambiado de fromUserId y toUserId a fromUser y toUser
 
     try {
-        // Verifica si ambos usuarios existen
-        const fromUser = await Usuario.findById(fromUserId);
-        const toUser = await Usuario.findById(toUserId);
+        // Verifica si ambos usuarios existen utilizando el campo 'user'
+        const fromUserData = await Usuario.findOne({ user: fromUser });
+        const toUserData = await Usuario.findOne({ user: toUser });
 
-        if (!fromUser || !toUser) {
+        if (!fromUserData || !toUserData) {
             return res.status(404).json({ error: 'Uno o ambos jugadores no existen.' });
         }
 
         // Verifica si el objeto está en el inventario del jugador que lo está transfiriendo
-        const objectIndex = fromUser.inventario.findIndex(obj => obj._id.equals(objetoId) && obj.active === false);
+        const objectIndex = fromUserData.inventario.findIndex(obj => obj._id.equals(objetoId) && obj.active === false);
         if (objectIndex === -1) {
             return res.status(400).json({ error: 'El objeto no está en el inventario del jugador o está activo.' });
         }
 
         // Obtén el objeto a transferir
-        const objeto = fromUser.inventario[objectIndex];
+        const objeto = fromUserData.inventario[objectIndex];
 
         // Elimina el objeto del inventario del jugador que lo transfiere
-        fromUser.inventario.splice(objectIndex, 1);
+        fromUserData.inventario.splice(objectIndex, 1);
 
         // Agrega el objeto al inventario del jugador receptor
-        toUser.inventario.push(objeto);
+        toUserData.inventario.push(objeto);
 
         // Guarda los cambios en la base de datos
-        await fromUser.save();
-        await toUser.save();
+        await fromUserData.save();
+        await toUserData.save();
 
         res.status(200).json({ message: 'El objeto ha sido transferido exitosamente.' });
     } catch (error) {
@@ -42,27 +42,27 @@ router.post('/transfer-object', async (req, res) => {
 });
 
 // Endpoint para desactivar un objeto del inventario
-router.patch('/deactivateObject/:userId/:objetoId', async (req, res) => {
-    const { userId, objetoId } = req.params;
+router.patch('/deactivateObject/:user/:objetoId', async (req, res) => {
+    const { user, objetoId } = req.params; // Cambiado de userId a user
 
     try {
-        // Verifica si el usuario existe
-        const user = await Usuario.findById(userId);
-        if (!user) {
+        // Verifica si el usuario existe utilizando el campo 'user'
+        const userData = await Usuario.findOne({ user });
+        if (!userData) {
             return res.status(404).json({ error: 'Jugador no encontrado.' });
         }
 
         // Encuentra el objeto en el inventario del jugador
-        const itemIndex = user.inventario.findIndex(obj => obj.objetoId.equals(objetoId));
+        const itemIndex = userData.inventario.findIndex(obj => obj.objetoId.equals(objetoId));
         if (itemIndex === -1) {
             return res.status(404).json({ error: 'Objeto no encontrado en el inventario del jugador.' });
         }
 
         // Cambia el estado del objeto a 'active = false'
-        user.inventario[itemIndex].active = false;
+        userData.inventario[itemIndex].active = false;
 
         // Guarda los cambios en la base de datos
-        await user.save();
+        await userData.save();
 
         res.status(200).json({ message: 'Objeto desactivado exitosamente.' });
     } catch (error) {
@@ -72,27 +72,27 @@ router.patch('/deactivateObject/:userId/:objetoId', async (req, res) => {
 });
 
 // Endpoint para activar un objeto del inventario
-router.patch('/activateObject/:userId/:objetoId', async (req, res) => {
-    const { userId, objetoId } = req.params;
+router.patch('/activateObject/:user/:objetoId', async (req, res) => {
+    const { user, objetoId } = req.params; // Cambiado de userId a user
 
     try {
-        // Verifica si el usuario existe
-        const user = await Usuario.findById(userId);
-        if (!user) {
+        // Verifica si el usuario existe utilizando el campo 'user'
+        const userData = await Usuario.findOne({ user });
+        if (!userData) {
             return res.status(404).json({ error: 'Jugador no encontrado.' });
         }
 
         // Encuentra el objeto en el inventario del jugador
-        const itemIndex = user.inventario.findIndex(obj => obj.objetoId.equals(objetoId));
+        const itemIndex = userData.inventario.findIndex(obj => obj.objetoId.equals(objetoId));
         if (itemIndex === -1) {
             return res.status(404).json({ error: 'Objeto no encontrado en el inventario del jugador.' });
         }
 
         // Cambia el estado del objeto a 'active = true'
-        user.inventario[itemIndex].active = true;
+        userData.inventario[itemIndex].active = true;
 
         // Guarda los cambios en la base de datos
-        await user.save();
+        await userData.save();
 
         res.status(200).json({ message: 'Objeto activado exitosamente.' });
     } catch (error) {

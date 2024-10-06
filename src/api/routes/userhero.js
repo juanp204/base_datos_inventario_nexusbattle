@@ -6,18 +6,19 @@ const Usuario = require('../../modelos/usuarios');
 // Obtener toda la lista de heroes existentes
 router.get('/', async (req, res) => {
     try {
-        const heroes = await Heroe.find()
+        const heroes = await Heroe.find();
         res.status(200).json(heroes);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 });
 
-// Obtener un heroe por id usuarios
-
-router.get('/:id', async (req, res) => {
+// Obtener un heroe por campo 'user' de los usuarios
+router.get('/:user', async (req, res) => {
     try {
-        const usuario = await Usuario.findById(req.params.id).populate('heroe').select('heroe');
+        const usuario = await Usuario.findOne({ user: req.params.user })
+            .populate('heroe')
+            .select('heroe');
         if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
         res.status(200).json(usuario);
     } catch (err) {
@@ -25,38 +26,38 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-//agregar o cambiar heroe al jugador
-
+// Agregar o cambiar heroe al jugador
 router.post('/add', async (req, res) => {
-    const { userId, nombreHeroe } = req.body;
+    const { user, nombreHeroe } = req.body;
 
     try {
-        // Verifica si el usuario existe
-        const user = await Usuario.findById(userId);
-        if (!user) {
+        // Verifica si el usuario existe buscando por el campo "user"
+        const userData = await Usuario.findOne({ user });
+        if (!userData) {
             return res.status(404).json({ error: 'Jugador no encontrado.' });
         }
 
         let objeto = null;
 
         try {
-            objeto = await Promise.any([
-                Heroe.findOne({ name: nombreHeroe }).then(obj => obj ? obj : Promise.reject())
-            ]);
+            objeto = await Heroe.findOne({ name: nombreHeroe });
+            if (!objeto) throw new Error();
         } catch (error) {
-            // Si no se encuentra el objeto en ninguna de las colecciones
-            return res.status(404).json({ error: 'Objeto no encontrado.' });
+            // Si no se encuentra el objeto en la colección de héroes
+            return res.status(404).json({ error: 'Heroe no encontrado.' });
         }
 
-        // Agrega el objeto al inventario del usuario
-        user.heroe = objeto._id
+        // Asigna el héroe al usuario
+        userData.heroe = objeto._id;
 
-        // Guarda el usuario con el nuevo objeto en el inventario
-        await user.save();
+        // Guarda el usuario con el nuevo héroe asignado
+        await userData.save();
 
-        res.status(200).json({ message: 'Objeto agregado al inventario exitosamente.' });
+        res.status(200).json({ message: 'Héroe asignado exitosamente al jugador.' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error en el servidor.' });
     }
 });
+
+module.exports = router;

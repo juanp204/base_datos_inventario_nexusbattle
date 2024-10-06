@@ -4,26 +4,25 @@ const mongoose = require('mongoose');
 const Usuario = require('../../modelos/usuarios'); // Asegúrate de tener la ruta correcta al modelo
 const { Weapon, Armor, Item } = require('../../modelos/objetos'); // Modelo de Objetos
 
-// Enpoint obtener el inventario del usuario
-router.get('/:userId', async (req, res) => {
-    const { userId } = req.params;
+// Endpoint para obtener el inventario del usuario
+router.get('/:user', async (req, res) => {
+    const { user } = req.params;
 
     try {
         // Verifica si el usuario existe
-        const user = await Usuario.findById(userId)
+        const userData = await Usuario.findOne({ user })
             .populate('inventario.objetoId')
-            .select('inventario')
+            .select('inventario inventario_juego')
             .exec();
 
-
-        if (!user) {
+        if (!userData) {
             return res.status(404).json({ error: 'Jugador no encontrado.' });
         }
-        console.log(user)
+
         // Obtén el inventario del jugador con los detalles de los objetos
         const inventory = {
-            inventario: user.inventario,
-            inventario_juego: user.inventario_juego
+            inventario: userData.inventario,
+            inventario_juego: userData.inventario_juego
         };
 
         res.status(200).json(inventory);
@@ -33,14 +32,14 @@ router.get('/:userId', async (req, res) => {
     }
 });
 
-//agregar objetos al inventario
+// Agregar objetos al inventario
 router.post('/add', async (req, res) => {
-    const { userId, nombreObjeto } = req.body;
+    const { user, nombreObjeto } = req.body;
 
     try {
         // Verifica si el usuario existe
-        const user = await Usuario.findById(userId);
-        if (!user) {
+        const userData = await Usuario.findOne({ user });
+        if (!userData) {
             return res.status(404).json({ error: 'Jugador no encontrado.' });
         }
 
@@ -59,7 +58,7 @@ router.post('/add', async (req, res) => {
         }
 
         // Agrega el objeto al inventario del usuario
-        user.inventario.push({
+        userData.inventario.push({
             _id: new mongoose.Types.ObjectId(),
             objetoId: objeto._id,
             refPath: tipoObjeto,  // Indica el tipo de objeto (Weapon, Armor, Item)
@@ -67,7 +66,7 @@ router.post('/add', async (req, res) => {
         });
 
         // Guarda el usuario con el nuevo objeto en el inventario
-        await user.save();
+        await userData.save();
 
         res.status(200).json({ message: 'Objeto agregado al inventario exitosamente.' });
     } catch (error) {
@@ -78,23 +77,23 @@ router.post('/add', async (req, res) => {
 
 // Ruta para transferir un objeto de inventario a inventario_juego
 router.post('/transfer', async (req, res) => {
-    const { userId, IdObjeto } = req.body;
+    const { user, IdObjeto } = req.body;
 
     try {
         // Verifica si el usuario existe
-        const user = await Usuario.findById(userId);
-        if (!user) {
+        const userData = await Usuario.findOne({ user });
+        if (!userData) {
             return res.status(404).json({ error: 'Jugador no encontrado.' });
         }
 
         // Encuentra el objeto en el inventario usando el _id
-        const objetoIndex = user.inventario.findIndex(item => item._id.toString() === IdObjeto);
+        const objetoIndex = userData.inventario.findIndex(item => item._id.toString() === IdObjeto);
 
         if (objetoIndex === -1) {
             return res.status(404).json({ error: 'Objeto no encontrado en el inventario.' });
         }
 
-        const objeto = user.inventario[objetoIndex];
+        const objeto = userData.inventario[objetoIndex];
 
         // Verifica si el objeto está activo
         if (!objeto.active) {
@@ -102,10 +101,10 @@ router.post('/transfer', async (req, res) => {
         }
 
         // Elimina el objeto del inventario
-        user.inventario.splice(objetoIndex, 1);
+        userData.inventario.splice(objetoIndex, 1);
 
         // Agrega el objeto a inventario_juego
-        user.inventario_juego.push({
+        userData.inventario_juego.push({
             _id: objeto._id,
             objetoId: objeto.objetoId,
             refPath: objeto.refPath,
@@ -113,7 +112,7 @@ router.post('/transfer', async (req, res) => {
         });
 
         // Guarda los cambios en la base de datos
-        await user.save();
+        await userData.save();
 
         res.status(200).json({ message: 'Objeto transferido al inventario de juego exitosamente.' });
     } catch (error) {
